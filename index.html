@@ -52,7 +52,6 @@ const imageBounds = [[46.62035, 10.09064], [46.70052, 10.24963]];
 L.imageOverlay(imageUrl, imageBounds).addTo(map);
 map.fitBounds(imageBounds);
 
-
 // --- Load CSV files automatically from repository ---
 Promise.all([
   fetch('view_nestsCSV_app.csv').then(r => r.text()),
@@ -64,15 +63,17 @@ Promise.all([
   buildNestList();
 });
 
-// --- CSV parser ---
+// --- Fixed CSV parser (handles quotes and NULLs) ---
 function parseCSV(text) {
   const lines = text.trim().split(/\r?\n/);
   if (lines.length === 0) return [];
-  const headers = lines.shift().split(/[,\t]/).map(h => h.trim());
+  
+  const headers = lines.shift().split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+
   return lines.map(line => {
-    const values = line.split(/[,\t]/);
+    const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, '').replace(/^NULL$/i, ''));
     const obj = {};
-    headers.forEach((h, i) => obj[h] = values[i]?.trim() || "");
+    headers.forEach((h, i) => obj[h] = values[i] || "");
     return obj;
   });
 }
