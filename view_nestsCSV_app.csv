@@ -1,0 +1,49 @@
+"nest_id","x","y","distance","territory","name","photo_url"
+"SP2401","46.624955","10.193195","20","SP2401","Muur",
+"SP2401b","46.625059","10.192978","20","SP2401b","Muur West",
+"SP2401a","46.624955","10.193195","21","SP2401a","Muur Ost",
+"SP2406","46.6256422922015","10.194107433781","135","SP2406",NULL,
+"US2514","46.680806","10.141839","372","US2514",NULL,NULL
+"SP2402","46.6284110862761","10.194532983005","430","SP2402","Wehr","https://raw.githubusercontent.com/wdomi/snp_nests/main/3_SP2402_wehr_250414.jpeg"
+"SP2523","46.62846","10.194570003005","431","SP2523","Edelweiss","https://raw.githubusercontent.com/wdomi/snp_nests/main/4_SP2523_edelweiss_250814.jpeg"
+"US2513put","46.682553","10.142031","507","US2513put",NULL,NULL
+"SP2410","46.6298790089786","10.1948300376534","580","SP2410",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/5_SP2410_250509.jpeg"
+"US2512","46.682761","10.14155","601","US2512",NULL,NULL
+"SP2409","46.633326401934","10.193483736366","1000","SP2409",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/6_SP2409_250509.jpeg"
+"SP2512","46.6347199771553","10.1908300258219","1260","SP2512",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/7_SP2512_250509.jpeg"
+"SP2522","46.63477345","10.19074926","1310","SP2522",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/SP2522.jpeg"
+"SP2408","46.6382920090109","10.1806986518204","1380","SP2408",NULL,
+"SP2511","46.6350000165402","10.1893889252096","1430","SP2511",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/7b_SP2511_250509.jpeg"
+"SP2405","46.6344845294952","10.1866728533059","1640","SP2405","Engi","https://raw.githubusercontent.com/wdomi/snp_nests/main/8_SP2405_engi_250414.jpeg"
+"US2511put","46.687736","10.133267","1720","US2511put",NULL,NULL
+"SP2404","46.6340413782745","10.1850789505988","1760","SP2404",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/9_SP2404_250513.jpeg"
+"US2510","46.687736","10.133267","1780","US2510",NULL,NULL
+"US2509","46.687797","10.132989","1800","US2509",NULL,NULL
+"US2508","46.688094","10.13212","1880","US2508",NULL,NULL
+"SP2407","46.6352981608361","10.1833343412727","1960","SP2407",NULL,
+"US2507","46.688136","10.1311","1960","US2507",NULL,NULL
+"US2506","46.687972","10.130161","2030","US2506",NULL,NULL
+"SP2403","46.6370402555912","10.1819842681288","2200","SP2403","Punt Periv",
+"US2505b","46.68928","10.12757","2290","US2505b",NULL,NULL
+"US2505","46.689314","10.127403","2300","US2505",NULL,NULL
+"US2515","46.691778","10.125961","2600","US2515",NULL,NULL
+"SP2521","46.6416","10.1783","2840","SP2521",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/SP2521a.jpeg"
+"SP2516","46.6424027457833","10.1771222613751","3050","SP2516","Höhli","https://raw.githubusercontent.com/wdomi/snp_nests/main/11_SP2516_250502.jpeg"
+"SP2520","46.64225","10.17702","3060","SP2520","Höhle neu","https://raw.githubusercontent.com/wdomi/snp_nests/main/SP2520.jpeg"
+"US2503","46.6938340198248","10.1182119827717","3180","US2503",NULL,
+"US2504put","46.69329","10.12062","3460","US2504put",NULL,
+"US2502","46.6950929816812","10.1153840124607","3650","US2502",NULL,
+"US2502b","46.6950929816812","10.1153840124607","3655","US2502b",NULL,
+"SP2515","46.6460944712162","10.1715416740626","3750","SP2515","kleine Eier","https://raw.githubusercontent.com/wdomi/snp_nests/main/12_SP2515_250513.jpeg"
+"SP2514","46.6492861323058","10.1686111092567","4220","SP2514","Tiefste Stelle","https://raw.githubusercontent.com/wdomi/snp_nests/main/SP2514.jpeg"
+"SP2518","46.650318","10.167458","4420","SP2518",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/14_SP2518_250611.jpeg"
+"SP2513","46.6528500337153","10.1680399663746","4770","SP2513","Unterste","https://raw.githubusercontent.com/wdomi/snp_nests/main/16_SP2513_250501.jpeg"
+"SP2513b","46.6528500337153","10.1680399663746","4780","SP2513b","Unterste Nord","https://raw.githubusercontent.com/wdomi/snp_nests/main/17_SP2513b_250501.jpeg"
+"SP2517","46.653294","10.168175","4820","SP2517",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/18_SP2517_250611.jpeg"
+"US2501","46.695933016017","10.101695023477","4850","US2501","Zernez_Brücke",
+"ZuflussOdF","46.65988","10.16584","5720","ZuflussOdF","Zufluss Ova dal Fuorn",NULL
+"Zufluss_Od","46.65988","10.16584","5720","Zufluss_Od","Zufluss Ova dal Fuorn",NULL
+"SP2519put","46.66115","10.166103","5830","SP2519put","Schlucht","https://raw.githubusercontent.com/wdomi/snp_nests/main/SP2519.jpeg"
+"OF2503","46.6537510044872","10.189035963267","7970","OF2503",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/OF2503.jpeg"
+"OF2501","46.6602769866585","10.2272020373493","11910","OF2501","Holzbrücke","https://raw.githubusercontent.com/wdomi/snp_nests/main/OF2501.jpeg"
+"OF2502","46.6580940037965","10.2366610150784","12730","OF2502",NULL,"https://raw.githubusercontent.com/wdomi/snp_nests/main/OF2502.jpeg"

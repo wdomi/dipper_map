@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bird Territories Map (Online)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  html, body { height: 100%; margin: 0; font-family: sans-serif; }
+  #map { position: absolute; top: 0; bottom: 0; left: 0; right: 300px; z-index: 0; }
+  #sidebar { position: absolute; top: 0; right: 0; width: 300px; height: 100%; background: #fff; border-left: 1px solid #ccc; padding: 10px; overflow-y: auto; z-index: 1000; }
+  #controls { display:none; }
+  h2 { margin-top: 0; font-size: 1.1em; }
+  .label { font-weight: bold; }
+  #photoContainer img { border: 1px solid #ccc; max-height: 200px; width: 100%; object-fit: contain; margin-top: 5px; }
+  .nest-label { background: rgba(255,255,255,0.9); border-radius: 3px; padding: 1px 4px; font-size: 11px; color: #333; box-shadow: 0 0 1px rgba(0,0,0,0.4); border: 1px solid rgba(0,0,0,0.08); pointer-events: none; }
+  #nestList { list-style: none; padding: 0; margin: 8px 0 0 0; }
+  #nestList li { padding: 6px 8px; margin-bottom: 6px; border: 1px solid #eee; border-radius: 6px; cursor: pointer; background: #fafafa; font-size: 13px; }
+  #nestList li:hover { background: #f0f8ff; }
+  #nestList li.selected { background: #fffbec; border-color: #ffd66b; box-shadow: 0 0 4px rgba(255,200,60,0.25); }
+</style>
+</head>
+<body>
+
+<div id="controls">
+  <div>Loading CSVs automatically...</div>
+</div>
+
+<div id="map"></div>
+<div id="sidebar">
+  <h2>Nest Information</h2>
+  <div id="info">Click a nest to see details here.</div>
+  <h2 style="margin-top:12px">All Nests (sorted by distance)</h2>
+  <ul id="nestList"></ul>
+</div>
+
+<script>
+let nestsData = [];
+let birdsData = [];
+let markers = [];
+let highlightedNestId = null;
+
+// Initialize map
+const map = L.map('map', { zoomControl: false });
+L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+// --- PNG Overlay from repository ---
+const imageUrl = 'my-map.png'; // Make sure this PNG is in your repo
+const imageBounds = [[46.62035, 10.09064], [46.70052, 10.24963]];
+L.imageOverlay(imageUrl, imageBounds).addTo(map);
+map.fitBounds(imageBounds);
+
+// --- Load CSV files automatically from repository ---
+Promise.all([
+  fetch('view_nestsCSV_app.csv').then(r => r.text()),
+  fetch('view_birdCSV_apps.csv').then(r => r.text())
+]).then(([nestsText, birdsText]) => {
+  nestsData = parseCSV(nestsText);
+  birdsData = parseCSV(birdsText);
+  drawMarkers();
+  buildNestList();
+});
+
+// --- CSV parser ---
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length === 0) return [];
+  const headers = lines.shift().split(/[,\t]/).map(h => h.trim());
+  return lines.map(line => {
+    const values = line.split(/[,\t]/);
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = values[i]?.trim() || "");
+    return obj;
+  });
+}
+
+function drawMarkers() {
+  markers.forEach(m => m?.remove?.());
+  markers = [];
+
+  nestsData.forEach(nest => {
+    if (!nest.x || !nest.y) return;
+    const lat = parseFloat(nest.x);
+    const lon = parseFloat(nest.y);
+
+    const circle = L.circleMarker([lat, lon], {
+      radius: 6, color: 'crimson', fillColor: 'crimson', fillOpacity: 0.8, weight: 1
+    }).addTo(map);
+
+    circle.bindTooltip(nest.nest_id || '', {
+      permanent: true,
+      direction: 'top',
+      className: 'nest-label',
+      offset: [0, -10]
+    }).openTooltip();
+
+    nest._marker = circle;
+    markers.push(circle);
+
+    circle.on('click', () => {
+      showNestInfo(nest);
+      highlightNest(nest.nest_id);
+    });
+  });
+
+  if (markers.length) {
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.1));
+  }
+}
+
+function buildNestList() {
+  const list = document.getElementById('nestList');
+  list.innerHTML = '';
+
+  const sorted = [...nestsData].sort((a, b) => {
+    const da = parseFloat((a.distance || "").replace(",", "."));
+    const db = parseFloat((b.distance || "").replace(",", "."));
+    const na = Number.isFinite(da) ? da : Infinity;
+    const nb = Number.isFinite(db) ? db : Infinity;
+    return na - nb;
+  });
+
+  sorted.forEach((nest, idx) => {
+    const li = document.createElement('li');
+    const title = nest.nest_id || `#${idx+1}`;
+    const extra = nest.name ? ` — ${nest.name}` : '';
+    const distText = nest.distance ? ` (${nest.distance})` : ' (no distance)';
+    li.textContent = title + extra + distText;
+    li.dataset.nestId = nest.nest_id || '';
+    li.addEventListener('click', () => {
+      highlightNest(nest.nest_id);
+      if (nest._marker) {
+        const latlng = nest._marker.getLatLng();
+        const targetZoom = Math.max(map.getZoom(), 16);
+        map.setView(latlng, targetZoom, { animate: true });
+        showNestInfo(nest);
+      }
+    });
+    list.appendChild(li);
+  });
+
+  updateListSelection();
+}
+
+function updateListSelection() {
+  const listItems = document.querySelectorAll('#nestList li');
+  listItems.forEach(li => {
+    if (li.dataset.nestId && highlightedNestId && li.dataset.nestId === highlightedNestId) {
+      li.classList.add('selected');
+    } else {
+      li.classList.remove('selected');
+    }
+  });
+}
+
+function highlightNest(nestId) {
+  if (highlightedNestId) {
+    const prev = nestsData.find(n => n.nest_id === highlightedNestId);
+    if (prev && prev._marker) {
+      prev._marker.setStyle({ radius: 6, color: 'crimson', fillColor: 'crimson', fillOpacity: 0.8, weight: 1 });
+      prev._marker.bringToBack();
+    }
+  }
+
+  const nest = nestsData.find(n => n.nest_id === nestId);
+  if (nest && nest._marker) {
+    nest._marker.setStyle({ radius: 10, color: '#ffec3d', fillColor: '#ffec3d', fillOpacity: 0.9, weight: 2 });
+    nest._marker.bringToFront();
+    highlightedNestId = nestId;
+  } else {
+    highlightedNestId = null;
+  }
+
+  updateListSelection();
+}
+
+function showNestInfo(nest) {
+  const related = birdsData.filter(b => b.territory?.trim() === nest.territory?.trim());
+
+  let html = `
+    <div><span class="label">Nest ID:</span> ${nest.nest_id || ''}</div>
+    <div><span class="label">Territory:</span> ${nest.territory || ''} ${nest.name || ''}</div>
+    <div><span class="label">Distance:</span> ${nest.distance || ''}</div>
+    <div><span class="label">Coordinates:</span> ${nest.x || ''}, ${nest.y || ''}</div>
+    <div><span class="label">Picture URL:</span> 
+      ${nest.photo_url ? `<a href="#" id="showPhotoLink">click here</a>` : 'No photo available'}
+    </div>
+    <div id="photoContainer"></div>
+  `;
+
+  if (related.length) {
+    html += `<hr><div class="label">Birds in this territory:</div>`;
+    related.forEach(b => {
+      html += `<div>${b.bird_id || ''} ${b.name || ''} — ${b.mark_color || 'no color'} — ${(b.sex || '') + '/' + (b.age || '')}</div>`;
+    });
+  } else {
+    html += `<hr><div>No birds linked yet.</div>`;
+  }
+
+  const infoDiv = document.getElementById('info');
+  infoDiv.innerHTML = html;
+
+  if (nest.photo_url) {
+    let visible = false;
+    document.getElementById('showPhotoLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      const photoDiv = document.getElementById('photoContainer');
+      if (!visible) {
+        photoDiv.innerHTML = `<img src="${nest.photo_url}" alt="Nest photo">`;
+      } else {
+        photoDiv.innerHTML = '';
+      }
+      visible = !visible;
+    });
+  }
+
+  highlightedNestId = nest.nest_id || null;
+  updateListSelection();
+}
+</script>
+
+</body>
+</html>
