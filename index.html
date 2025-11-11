@@ -46,11 +46,12 @@ let highlightedNestId = null;
 const map = L.map('map', { zoomControl: false });
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-// --- PNG Overlay from repository ---
-const imageUrl = 'my-map.png'; // Make sure this PNG is in your repo
+// --- JPG Overlay from repository ---
+const imageUrl = 'my-map.jpg'; // Make sure this JPG is in your repo
 const imageBounds = [[46.62035, 10.09064], [46.70052, 10.24963]];
 L.imageOverlay(imageUrl, imageBounds).addTo(map);
 map.fitBounds(imageBounds);
+
 
 // --- Load CSV files automatically from repository ---
 Promise.all([
